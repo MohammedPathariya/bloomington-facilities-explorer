@@ -1,1 +1,1 @@
-echo "*.ipynb linguist-language=Python" >> .gitattributes
+echo '*.ipynb linguist-language=Python' > .gitattributes
