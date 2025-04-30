@@ -1,0 +1,87 @@
+Project Summary: Bloomington City Facilities Explorer
+=====================================================
+
+Overview
+--------
+This project involved building an end-to-end interactive visualization tool for exploring public facilities across the city council districts of Bloomington, Indiana. The process included thorough data cleaning, geospatial enrichment, categorization, frontend visualization, and backend integration — all containerized for streamlined deployment.
+
+1. Data Collection and Cleaning
+-------------------------------
+- Source Integration: Compiled raw data from multiple sources including healthcare centers, fire and police departments, schools, government offices, restaurants, and cemeteries.
+- Address Formatting: Standardized address fields for geocoding by correcting syntax, spacing, and punctuation.
+- Manual Geocoding: Retrieved and mapped latitude and longitude using external tools and address alignment.
+- Geometry Column: Constructed a `geometry` column using Shapely’s `Point()` objects for spatial operations.
+- Merging: Consolidated all facility group DataFrames into a single unified dataset: city_fac_bloomington_full.
+
+2. Data Standardization and Enrichment
+--------------------------------------
+- Column Renaming: Transformed column names into readable, code-friendly formats (e.g., “Facility” → Facility_Name).
+- Missing Values: Handled missing values intelligently based on contextual inferences (e.g., schools tagged as “Public School”).
+- Facility Group Unification: Reduced facility groups to a clean and consistent set:
+    - Cemeteries
+    - Dining & Cafes
+    - Education & Learning
+    - Emergency & Safety Services
+    - Government & Civic Services
+    - Healthcare & Wellness
+    - Parking & Garages
+    - Parks & Green Spaces
+    - Retail & Community Services
+    - Trails & Playgrounds
+- Facility ID Generation: Generated IDs using initials from Facility Group and Type, plus a zero-padded number (e.g., GOV-PS-003).  
+- Coordinate Precision: Retained original coordinate precision for maximum spatial accuracy.
+
+
+3. Backend Development (Flask)
+------------------------------
+- Developed a Python Flask API with the following features:
+    - Loads cleaned dataset into memory
+    - Supports /compare POST endpoint to compare any two districts
+    - Serves data dynamically for frontend integration
+- Installed packages:
+    pip install flask flask-cors pandas geopandas shapely
+
+- Run locally:
+    python app.py
+
+4. Frontend Development (React + Recharts + Leaflet)
+----------------------------------------------------
+- Created a React app with four main visualization routes:
+    - Interactive Map (Leaflet): Explore facilities by type and toggle visibility
+    - PNG Chart View: View pre-generated bar chart for service density
+    - District Comparison Tool: Side-by-side facility breakdown with bar, radar, and pie charts
+    - District Map View: Static map visualizing district boundaries
+- Polished the homepage with intro, features list, and navigation buttons
+- Installed packages:
+    npm install react-router-dom recharts leaflet
+
+- Run locally:
+    npm start
+
+5. Dockerization and Deployment
+-------------------------------
+- Created Dockerfiles for both frontend (React + Nginx) and backend (Flask)
+- Defined services in docker-compose.yml:
+
+    docker-compose.yml includes:
+      - frontend: serves React app on port 3000
+      - backend: serves Flask API on port 5000
+
+- Terminal commands used:
+
+    # From project root
+    docker-compose up --build        # Builds and runs both frontend and backend
+
+    docker-compose down              # Stops and removes containers
+
+    docker-compose logs              # View container logs
+
+    docker system prune              # Clean up unused Docker resources
+
+6. Result
+---------
+The final deliverable is a robust, containerized web application with:
+- Clean backend data pipeline
+- Rich, interactive visualizations for facility comparison
+- District-level insights using modern charting and mapping tools
+- Seamless launch via Docker and easily portable for deployment
